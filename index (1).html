@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardFindz eBay Profit Calculator - Calculate Your Real Profit</title>
+    <meta name="description" content="Free eBay profit calculator by CardFindz. Calculate eBay fees, shipping costs, and profit margins instantly for sports cards and collectibles.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            padding: 20px;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0 30px;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            color: #ffffff;
+        }
+
+        header p {
+            color: #8e8e93;
+            font-size: 1.15em;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .calculator-card {
+            background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid #3a3a3c;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+        }
+
+        .marketplace-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 35px;
+        }
+
+        .marketplace-btn {
+            background: #2c2c2e;
+            border: 2px solid #3a3a3c;
+            padding: 16px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #8e8e93;
+            text-align: center;
+        }
+
+        .marketplace-btn:hover {
+            border-color: #00c805;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .marketplace-btn.active {
+            background: linear-gradient(135deg, #00c805, #00b004);
+            border-color: #00c805;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 200, 5, 0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.85em;
+            color: #8e8e93;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8e93;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 16px 16px 40px;
+            border: 2px solid #3a3a3c;
+            border-radius: 12px;
+            font-size: 1.1em;
+            background: #2c2c2e;
+            color: #ffffff;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00c805;
+            box-shadow: 0 0 0 3px rgba(0, 200, 5, 0.1);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .result-card {
+            background: #2c2c2e;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #3a3a3c;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            border-color: #4a4a4c;
+        }
+
+        .result-label {
+            font-size: 0.8em;
+            color: #8e8e93;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .result-value.positive {
+            color: #00c805;
+        }
+
+        .result-value.negative {
+            color: #ff5000;
+        }
+
+        .result-value.neutral {
+            color: #ffffff;
+        }
+
+        .result-subtext {
+            font-size: 0.85em;
+            color: #8e8e93;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .breakdown-section {
+            background: #1c1c1e;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border: 1px solid #2c2c2e;
+        }
+
+        .breakdown-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #2c2c2e;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            color: #8e8e93;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .breakdown-value {
+            font-weight: 600;
+            font-size: 1em;
+            color: #ffffff;
+        }
+
+        .breakdown-value.negative {
+            color: #ff5000;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #2c2c2e, #1c1c1e);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border-left: 4px solid #00c805;
+        }
+
+        .tip-box h3 {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #00c805;
+            font-weight: 700;
+        }
+
+        .tip-box p {
+            color: #8e8e93;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .info-section {
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid #2c2c2e;
+        }
+
+        .info-section h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .info-section h3 {
+            font-size: 1.3em;
+            margin: 30px 0 15px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .info-section p {
+            color: #8e8e93;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-section li {
+            color: #8e8e93;
+            padding: 10px 0 10px 30px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .info-section li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #00c805;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #2c2c2e;
+            color: #8e8e93;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .calculator-card {
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .marketplace-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1c1c1e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3a3a3c;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4a4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CardFindz eBay Calculator</h1>
+            <p>Calculate your real profit after eBay fees and shipping. Built for sports card resellers.</p>
+        </header>
+
+        <div class="calculator-card">
+            <div class="section-title">eBay Fee Calculator</div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Sale Price</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">$</span>
+                        <input type="number" id="salePrice" placeholder="0.00" step="0.01" oninput="calculate()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Item Cost</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">$</span>
+                        <input type="number" id="itemCost" placeholder="0.00" step="0.01" oninput="calculate()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Shipping Cost</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">$</span>
+                        <input type="number" id="shippingCost" placeholder="0.00" step="0.01" oninput="calculate()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Other Costs (Optional)</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">$</span>
+                        <input type="number" id="otherCosts" placeholder="0.00" step="0.01" oninput="calculate()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-label">Net Profit</div>
+                    <div class="result-value positive" id="netProfit">$0.00</div>
+                    <div class="result-subtext" id="profitMargin">0% margin</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Total Fees</div>
+                    <div class="result-value neutral" id="totalFees">$0.00</div>
+                    <div class="result-subtext" id="feePercent">0% of sale</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">Break Even Price</div>
+                    <div class="result-value neutral" id="breakEven">$0.00</div>
+                    <div class="result-subtext">Minimum to break even</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-label">ROI</div>
+                    <div class="result-value neutral" id="roi">0%</div>
+                    <div class="result-subtext">Return on investment</div>
+                </div>
+            </div>
+
+            <div class="breakdown-section">
+                <div class="breakdown-title">Fee Breakdown</div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Sale Price</span>
+                    <span class="breakdown-value" id="breakdownSale">$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">eBay Fee (13.25% + $0.30)</span>
+                    <span class="breakdown-value negative" id="breakdownPlatformFee">-$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Payment Processing</span>
+                    <span class="breakdown-value negative" id="breakdownPaymentFee">-$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Shipping Cost</span>
+                    <span class="breakdown-value negative" id="breakdownShipping">-$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Item Cost</span>
+                    <span class="breakdown-value negative" id="breakdownItemCost">-$0.00</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Other Costs</span>
+                    <span class="breakdown-value negative" id="breakdownOther">-$0.00</span>
+                </div>
+                <div class="breakdown-item" style="border-top: 2px solid #3a3a3c; padding-top: 15px; margin-top: 10px;">
+                    <span class="breakdown-label" style="font-weight: 700; color: #ffffff;">Net Profit</span>
+                    <span class="breakdown-value" id="breakdownNetProfit" style="font-size: 1.3em;">$0.00</span>
+                </div>
+            </div>
+
+            <div class="tip-box" id="tipBox">
+                <h3>💡 Pro Tip</h3>
+                <p id="tipText">Enter your numbers above to see your real profit after all fees and costs.</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>How to Use the CardFindz eBay Calculator</h2>
+            <p>This calculator helps sports card and collectible resellers calculate their true profit after eBay fees and costs. Enter your sale price, item cost, and shipping cost to see your real profit instantly.</p>
+
+            <h3>eBay Fee Structure</h3>
+            <ul>
+                <li><strong>eBay Final Value Fee:</strong> 13.25% of the sale price + $0.30 per transaction</li>
+                <li><strong>Payment Processing:</strong> 2.9% of the sale price + $0.30 per transaction</li>
+                <li><strong>Total eBay Fees:</strong> Approximately 16.15% of your sale price + $0.60</li>
+            </ul>
+
+            <h3>Why Use an eBay Profit Calculator?</h3>
+            <p>Many card resellers lose money without realizing it because they don't account for all eBay fees. Between final value fees, payment processing, and shipping, eBay fees can eat up 16-20% of your sale price. This calculator shows you exactly where your money goes and helps you price cards correctly to ensure profit.</p>
+
+            <h3>Tips for Maximizing Profit on eBay</h3>
+            <ul>
+                <li>Factor in ALL costs before listing - including toploaders, team bags, and bubble mailers</li>
+                <li>Use calculated shipping to avoid losing money on heavier packages</li>
+                <li>Aim for at least 30-50% profit margin to make card flipping worthwhile</li>
+                <li>Consider eBay Promoted Listings cost (2-10% additional) if you use them</li>
+                <li>Bundle cards when possible to spread fixed fees across multiple items</li>
+                <li>Price competitively but don't undercut yourself - use comps wisely</li>
+            </ul>
+
+            <h3>Common Costs for Card Resellers</h3>
+            <p><strong>Supplies:</strong> Toploaders ($0.10-0.30), team bags ($0.02-0.05), bubble mailers ($0.50-1.00), tape and labels</p>
+            <p><strong>Shipping:</strong> First Class (up to 13oz): $4-5, Priority Mail: $8-10, tracking included</p>
+            <p><strong>Storage:</strong> Card boxes, binders, storage space for inventory</p>
+            <p><strong>Grading (Optional):</strong> PSA ($20-150), BGS ($20-400), can significantly increase value if done right</p>
+
+            <h3>About CardFindz</h3>
+            <p>CardFindz provides free tools and resources for sports card resellers. Whether you're flipping modern cards, vintage baseball, or breaking into the hobby, our calculators help you make smarter buying and selling decisions.</p>
+        </div>
+
+        <footer>
+            <p><strong>CardFindz</strong> - Free eBay profit calculator for sports card resellers.</p>
+            <p style="margin-top: 10px;">Calculate eBay fees, shipping costs, and real profit instantly.</p>
+            <p style="margin-top: 10px;">Follow us on Instagram: <a href="https://instagram.com/cardfindz" target="_blank" style="color: #00c805; text-decoration: none; font-weight: 600;">@cardfindz</a></p>
+            <p style="margin-top: 10px;">© 2025 CardFindz. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // eBay fee structure
+        const ebayFees = {
+            platformFee: 0.1325,
+            platformFixed: 0.30,
+            paymentFee: 0.029,
+            paymentFixed: 0.30
+        };
+
+        function calculate() {
+            const salePrice = parseFloat(document.getElementById('salePrice').value) || 0;
+            const itemCost = parseFloat(document.getElementById('itemCost').value) || 0;
+            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
+            const otherCosts = parseFloat(document.getElementById('otherCosts').value) || 0;
+
+            // Calculate eBay fees
+            const platformFee = (salePrice * ebayFees.platformFee) + ebayFees.platformFixed;
+            const paymentFee = (salePrice * ebayFees.paymentFee) + ebayFees.paymentFixed;
+
+            const totalFees = platformFee + paymentFee;
+            const totalCosts = itemCost + shippingCost + otherCosts;
+            const netProfit = salePrice - totalFees - totalCosts;
+            const profitMargin = salePrice > 0 ? (netProfit / salePrice) * 100 : 0;
+            const roi = itemCost > 0 ? (netProfit / itemCost) * 100 : 0;
+
+            // Calculate break even
+            const feeRate = ebayFees.platformFee + ebayFees.paymentFee;
+            const fixedFees = ebayFees.platformFixed + ebayFees.paymentFixed;
+            const breakEven = (itemCost + shippingCost + otherCosts + fixedFees) / (1 - feeRate);
+
+            // Update main results
+            document.getElementById('netProfit').textContent = formatCurrency(netProfit);
+            document.getElementById('netProfit').className = netProfit >= 0 ? 'result-value positive' : 'result-value negative';
+            document.getElementById('profitMargin').textContent = `${profitMargin.toFixed(1)}% margin`;
+            
+            document.getElementById('totalFees').textContent = formatCurrency(totalFees);
+            document.getElementById('feePercent').textContent = salePrice > 0 ? `${((totalFees / salePrice) * 100).toFixed(1)}% of sale` : '0% of sale';
+            
+            document.getElementById('breakEven').textContent = formatCurrency(breakEven);
+            
+            document.getElementById('roi').textContent = `${roi.toFixed(0)}%`;
+            document.getElementById('roi').className = roi >= 0 ? 'result-value positive' : 'result-value negative';
+
+            // Update breakdown
+            document.getElementById('breakdownSale').textContent = formatCurrency(salePrice);
+            document.getElementById('breakdownPlatformFee').textContent = '-' + formatCurrency(platformFee);
+            document.getElementById('breakdownPaymentFee').textContent = '-' + formatCurrency(paymentFee);
+            document.getElementById('breakdownShipping').textContent = '-' + formatCurrency(shippingCost);
+            document.getElementById('breakdownItemCost').textContent = '-' + formatCurrency(itemCost);
+            document.getElementById('breakdownOther').textContent = '-' + formatCurrency(otherCosts);
+            document.getElementById('breakdownNetProfit').textContent = formatCurrency(netProfit);
+            document.getElementById('breakdownNetProfit').className = netProfit >= 0 ? 'breakdown-value' : 'breakdown-value negative';
+
+            // Update tip
+            updateTip(profitMargin, netProfit, salePrice);
+        }
+
+        function updateTip(margin, profit, salePrice) {
+            const tipBox = document.getElementById('tipText');
+            
+            if (salePrice === 0) {
+                tipBox.textContent = 'Enter your sale price, costs, and shipping to see your real profit after eBay fees.';
+            } else if (profit <= 0) {
+                tipBox.textContent = '⚠️ You\'re losing money on this sale! Increase your price or find a cheaper source for this card.';
+            } else if (margin < 20) {
+                tipBox.textContent = '⚠️ Your profit margin is low. For card flipping, aim for at least 30-50% to make it worthwhile.';
+            } else if (margin < 30) {
+                tipBox.textContent = '👍 Decent margin, but could be better. Try to find cards at better prices or list higher.';
+            } else if (margin < 50) {
+                tipBox.textContent = '✅ Great margin! This is a solid flip. Keep finding deals like this and you\'ll do well.';
+            } else {
+                tipBox.textContent = '🔥 Excellent margin! This is exactly what you want in card flipping. These are the deals that make real money.';
+            }
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+
+        // Initialize
+        calculate();
+    </script>
+</body>
+</html>
